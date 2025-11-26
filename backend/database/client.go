@@ -2,7 +2,6 @@ package database
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"my-shop/models"
@@ -17,7 +16,7 @@ var DB *gorm.DB
 func Connect() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		fmt.Println("ไม่เจอไฟล์ .env (ไม่เป็นไรถ้าอยู่บน Server)")
 	}
 
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
