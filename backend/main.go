@@ -42,6 +42,6 @@ func main() {
 		port = "8080"
 	}
 
-	// app.Listen(":8080")  <-- ลบอันนี้ทิ้ง
+	// app.Listen(":8080")
 	app.Listen(":" + port) // <-- ใช้อันนี้แทน
 }
