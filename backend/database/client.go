@@ -33,7 +33,7 @@ func Connect() {
 	}
 
 	// เรียกใช้ Book จาก package models
-	database.AutoMigrate(&models.Book{})
+	database.AutoMigrate(&models.Book{}, &models.User{})
 
 	DB = database
 	fmt.Println("✅ เชื่อมต่อ Database และแยกไฟล์สำเร็จ!")

@@ -30,6 +30,8 @@ func main() {
 
 	// 3. สร้างใหม่
 	app.Post("/books", controllers.CreateBook)
+	app.Post("/register", controllers.Register)
+	app.Post("/login", controllers.Login)
 
 	// 4. แก้ไข (ใช้ PUT)
 	app.Put("/books/:id", controllers.UpdateBook)
