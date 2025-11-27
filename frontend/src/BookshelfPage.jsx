@@ -1,18 +1,18 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { getBooks, createBook, deleteBook, updateBook } from './api'
-import './App.css'
+import './Bookshelf.css'
 
 const getBookColor = (id) => {
   const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f', '#9b59b6', '#34495e', '#1abc9c', '#d35400'];
   return colors[id % colors.length];
 }
 
-// รับ prop onLogout เพื่อเรียกใช้ฟังก์ชันออกจากระบบจาก App ตัวแม่
 function BookshelfPage({ onLogout }) {
   const [books, setBooks] = useState([])
   const [newBookTitle, setNewBookTitle] = useState("")
 
-  const fetchBooks = async () => {
+  // ✅ ใช้ useCallback เพื่อแช่แข็งฟังก์ชันนี้ แก้ปัญหา Hook dependency
+  const fetchBooks = useCallback(async () => {
     try {
       const response = await getBooks()
       const booksWithColor = response.data.map(book => ({
@@ -25,11 +25,11 @@ function BookshelfPage({ onLogout }) {
         onLogout() // Token หมดอายุ ให้เด้งออก
       }
     }
-  }
+  }, [onLogout]) // ปิดวงเล็บให้ครบตรงนี้
 
   useEffect(() => {
     fetchBooks()
-  }, [])
+  }, [fetchBooks]) // ใส่ fetchBooks เป็น dependency ได้อย่างปลอดภัย
 
   const handleAddBook = async (e) => {
     e.preventDefault()
@@ -40,6 +40,7 @@ function BookshelfPage({ onLogout }) {
       fetchBooks()
     } catch (error) {
       alert("เพิ่มไม่สำเร็จ")
+      console.error(error)
     }
   }
 
@@ -51,6 +52,7 @@ function BookshelfPage({ onLogout }) {
       fetchBooks()
     } catch (error) {
       alert("แก้ไขไม่ได้")
+      console.error(error)
     }
   }
 
@@ -61,6 +63,7 @@ function BookshelfPage({ onLogout }) {
       fetchBooks()
     } catch (error) {
       alert("ลบไม่ได้")
+      console.error(error)
     }
   }
 

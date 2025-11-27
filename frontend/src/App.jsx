@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import LoginPage from './LoginPage'
-import BookshelfPage from './ฺBookshelfPage' // นำเข้าหน้าที่เราเพิ่งแยก
+import BookshelfPage from './BookshelfPage' // นำเข้าหน้าที่เราเพิ่งแยก
 import './App.css'
 
 function App() {

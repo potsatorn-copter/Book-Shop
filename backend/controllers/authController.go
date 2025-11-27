@@ -122,6 +122,7 @@ func GoogleLogin(c *fiber.Ctx) error {
 		user = models.User{
 			Email:    email,
 			Password: "",
+			Verified: true,
 		}
 		database.DB.Create(&user)
 	}
