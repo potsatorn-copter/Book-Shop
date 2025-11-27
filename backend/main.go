@@ -3,6 +3,7 @@ package main
 import (
 	"my-shop/controllers"
 	"my-shop/database"
+	"my-shop/middleware"
 
 	"os"
 
@@ -21,23 +22,26 @@ func main() {
 	})
 
 	// --- CRUD Routes ---
-
-	// 1. ดูทั้งหมด
-	app.Get("/books", controllers.GetBooks)
-
-	// 2. ดูเล่มเดียว (สังเกต :id คือตัวแปรที่รับค่าได้)
-	app.Get("/books/:id", controllers.GetBook)
-
-	// 3. สร้างใหม่
-	app.Post("/books", controllers.CreateBook)
 	app.Post("/register", controllers.Register)
 	app.Post("/login", controllers.Login)
+	app.Post("/auth/google", controllers.GoogleLogin)
+
+	api := app.Group("/api", middleware.AuthRequired)
+
+	// 1. ดูทั้งหมด
+	api.Get("/books", controllers.GetBooks)
+
+	// 2. ดูเล่มเดียว (สังเกต :id คือตัวแปรที่รับค่าได้)
+	api.Get("/books/:id", controllers.GetBook)
+
+	// 3. สร้างใหม่
+	api.Post("/books", controllers.CreateBook)
 
 	// 4. แก้ไข (ใช้ PUT)
-	app.Put("/books/:id", controllers.UpdateBook)
+	api.Put("/books/:id", controllers.UpdateBook)
 
 	// 5. ลบ (ใช้ DELETE)
-	app.Delete("/books/:id", controllers.DeleteBook)
+	api.Delete("/books/:id", controllers.DeleteBook)
 
 	port := os.Getenv("PORT")
 	if port == "" {

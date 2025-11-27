@@ -1,34 +1,36 @@
 import axios from 'axios';
 
+// 1. กำหนด URL ของ Backend 
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 const api = axios.create({
   baseURL: BASE_URL,
 });
 
-// 1. Get All (ดูทั้งหมด) 
-export const getBooks = () => {
-  return api.get('/books');
-};
+// 2. ✨ เพิ่ม Interceptor (ด่านตรวจก่อนส่งของ)
+// ทุกครั้งที่จะยิง API โค้ดตรงนี้จะทำงานก่อนเสมอ
+api.interceptors.request.use((config) => {
+  // ไปค้นใน LocalStorage ว่ามีบัตรผ่านไหม
+  const token = localStorage.getItem('token');
+  
+  // ถ้ามี -> แนบไปใน Header ชื่อ Authorization
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
 
-// 2. Get One (ดูเล่มเดียว) 
-export const getBook = (id) => {
-  return api.get(`/books/${id}`);
-};
+// --- รวมมิตรฟังก์ชัน API ---
 
-// 3. Create (สร้าง) 
-export const createBook = (book) => {
-  return api.post('/books', book);
-};
+export const register = (data) => api.post('/register', data);
+export const login = (data) => api.post('/login', data);
 
-// 4. Update (แก้ไข)
-export const updateBook = (id, book) => {
-  return api.put(`/books/${id}`, book);
-};
-
-// 5. Delete (ลบ)
-export const deleteBook = (id) => {
-  return api.delete(`/books/${id}`);
-};
-
+export const getBooks = () => api.get('/api/books');
+export const createBook = (data) => api.post('/api/books', data);
+export const updateBook = (id, data) => api.put(`/api/books/${id}`, data);
+export const deleteBook = (id) => api.delete(`/api/books/${id}`);
+export const googleLogin = (token) => api.post('/auth/google', { token });
 export default api;
